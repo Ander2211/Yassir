@@ -64,3 +64,38 @@ zone "0.16.172.in-addr.arpa" IN {
 };
 
 
+
+
+------------------------------------------
+
+$TTL 86400
+@   IN  SOA dns.semita.sv. admin.semita.sv. (
+        2025091101 ; Serial
+        3600       ; Refresh
+        1800       ; Retry
+        1209600    ; Expire
+        86400 )    ; Minimum TTL
+
+; Registros principales
+@       IN  NS   dns.semita.sv.
+dns     IN  A    172.16.0.10
+www     IN  A    172.16.0.10
+mail    IN  A    172.16.0.10
+
+
+---------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
