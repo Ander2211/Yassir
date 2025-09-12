@@ -45,3 +45,22 @@ sudo ss -tulpn | grep named
 dig @127.0.0.1 semita.sv
 dig @127.0.0.1 www.semita.sv
 dig -x 172.16.0.10 @127.0.0.1
+
+
+
+
+
+----------Nuevo------------
+
+
+zone "semita.sv" IN {
+    type master;
+    file "semita.sv.zone";
+};
+
+zone "0.16.172.in-addr.arpa" IN {
+    type master;
+    file "0.16.172.in-addr.arpa.zone";
+};
+
+
