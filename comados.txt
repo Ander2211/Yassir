@@ -1,87 +1,20 @@
-# --- Instalar BIND ---
-sudo dnf install bind bind-utils -y
+# --- Verificar conectividad con el servidor Fedora ---
+ping 172.16.0.10
 
-# --- Verificar IP en enp0s8 ---
-ip addr show enp0s8
+# --- Detener y deshabilitar systemd-resolved ---
+sudo systemctl disable systemd-resolved --now
 
-# (opcional, configurar IP fija con nmcli si no está configurada)
-sudo nmcli con mod enp0s8 ipv4.addresses 172.16.0.10/24
-sudo nmcli con mod enp0s8 ipv4.method manual
-sudo nmcli con mod enp0s8 ipv4.gateway 172.16.0.1
-sudo nmcli con mod enp0s8 ipv4.dns 172.16.0.10
-sudo nmcli con up enp0s8
+# --- Eliminar resolv.conf viejo ---
+sudo rm /etc/resolv.conf
 
-# --- Editar configuración principal de BIND ---
-sudo nano /etc/named.conf
-# (agregar listen-on { 127.0.0.1; 172.16.0.10; }; y zonas semita.sv)
+# --- Crear resolv.conf nuevo apuntando a Fedora ---
+echo "nameserver 172.16.0.10" | sudo tee /etc/resolv.conf
 
-# --- Crear zona directa ---
-sudo nano /var/named/semita.sv.zone
+# --- Probar resolución contra Fedora ---
+dig @172.16.0.10 semita.sv
+dig @172.16.0.10 www.semita.sv
+dig -x 172.16.0.10 @172.16.0.10
 
-# --- Crear zona inversa ---
-sudo nano /var/named/0.16.172.in-addr.arpa.zone
-
-# --- Ajustar permisos de archivos de zona ---
-sudo chown root:named /var/named/semita.sv.zone /var/named/0.16.172.in-addr.arpa.zone
-sudo chmod 640 /var/named/semita.sv.zone /var/named/0.16.172.in-addr.arpa.zone
-
-# --- Verificar configuración ---
-sudo named-checkconf
-sudo named-checkzone semita.sv /var/named/semita.sv.zone
-sudo named-checkzone 0.16.172.in-addr.arpa /var/named/0.16.172.in-addr.arpa.zone
-
-# --- Iniciar y habilitar servicio ---
-sudo systemctl enable --now named
-sudo systemctl status named
-
-# --- Configurar firewall ---
-sudo firewall-cmd --permanent --zone=public --add-service=dns --interface=enp0s8
-sudo firewall-cmd --reload
-
-# --- Verificar que named escucha en la IP ---
-sudo ss -tulpn | grep named
-
-# --- Pruebas desde Fedora mismo ---
-dig @127.0.0.1 semita.sv
-dig @127.0.0.1 www.semita.sv
-dig -x 172.16.0.10 @127.0.0.1
-
-
-
-
-
-
-
-------------------------------------------
-
-
-$TTL 86400
-@   IN  SOA dns.semita.sv. admin.semita.sv. (
-        2025091101 ; Serial
-        3600       ; Refresh
-        1800       ; Retry
-        1209600    ; Expire
-        86400 )    ; Minimum TTL
-
-; Servidor DNS
-@   IN  NS   dns.semita.sv.
-10  IN  PTR  dns.semita.sv.
-
-
----------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# --- Probar resolución normal (usando resolv.conf) ---
+dig semita.sv
+dig www.semita.sv
