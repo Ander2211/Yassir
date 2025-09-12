@@ -1,20 +1,23 @@
-# --- Verificar conectividad con el servidor Fedora ---
-ping 172.16.0.10
+# 1. Crear o editar el archivo de configuración de la interfaz
+sudo nano /etc/netplan/01-netcfg.yaml
 
-# --- Detener y deshabilitar systemd-resolved ---
-sudo systemctl disable systemd-resolved --now
+# 2. Agregar la siguiente configuración (ajustar según tu configuración actual)
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s8:
+      addresses: [172.16.0.5/24]
+      # Si necesitas gateway y DNS, agrega:
+      # gateway4: 172.16.0.1
+      # nameservers:
+      #   addresses: [8.8.8.8, 8.8.4.4]
 
-# --- Eliminar resolv.conf viejo ---
-sudo rm /etc/resolv.conf
+# 3. Aplicar la configuración
+sudo netplan apply
 
-# --- Crear resolv.conf nuevo apuntando a Fedora ---
-echo "nameserver 172.16.0.10" | sudo tee /etc/resolv.conf
+# 4. Verificar la configuración
+ip addr show enp0s8
 
-# --- Probar resolución contra Fedora ---
-dig @172.16.0.10 semita.sv
-dig @172.16.0.10 www.semita.sv
-dig -x 172.16.0.10 @172.16.0.10
-
-# --- Probar resolución normal (usando resolv.conf) ---
-dig semita.sv
-dig www.semita.sv
+# 5. Probar conectividad (si hay otro dispositivo en la red)
+ping -c 4 172.16.0.1
