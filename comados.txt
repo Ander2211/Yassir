@@ -50,23 +50,10 @@ dig -x 172.16.0.10 @127.0.0.1
 
 
 
-----------Nuevo------------
-
-
-zone "semita.sv" IN {
-    type master;
-    file "semita.sv.zone";
-};
-
-zone "0.16.172.in-addr.arpa" IN {
-    type master;
-    file "0.16.172.in-addr.arpa.zone";
-};
-
-
 
 
 ------------------------------------------
+
 
 $TTL 86400
 @   IN  SOA dns.semita.sv. admin.semita.sv. (
@@ -76,14 +63,13 @@ $TTL 86400
         1209600    ; Expire
         86400 )    ; Minimum TTL
 
-; Registros principales
-@       IN  NS   dns.semita.sv.
-dns     IN  A    172.16.0.10
-www     IN  A    172.16.0.10
-mail    IN  A    172.16.0.10
+; Servidor DNS
+@   IN  NS   dns.semita.sv.
+10  IN  PTR  dns.semita.sv.
 
 
 ---------------------------------------
+
 
 
 
