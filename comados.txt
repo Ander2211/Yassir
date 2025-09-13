@@ -1,5 +1,11 @@
 
 
+cat /etc/resolv.conf
+---------------
+
+
+
+
 
 
 
@@ -63,6 +69,7 @@ network:
       gateway4: 172.16.0.1
       nameservers:
         addresses: [8.8.8.8, 8.8.4.4]
+
 
 
 
