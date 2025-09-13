@@ -24,5 +24,23 @@ ip addr show enp0s8
 # 5. Probar conectividad (si hay otro dispositivo en la red)
 ping -c 4 172.16.0.1
 
+----------------------------------------------------------------------
+
+# 1. Corregir permisos del archivo
+sudo chmod 600 /etc/netplan/01-netcfg.yaml
+
+# 2. Crear/configurar el archivo con la sintaxis correcta
+sudo nano /etc/netplan/01-netcfg.yaml
+
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s8:
+      addresses: [172.16.0.5/24]
+      gateway4: 172.16.0.1
+      nameservers:
+        addresses: [8.8.8.8, 8.8.4.4]
+
 
 
