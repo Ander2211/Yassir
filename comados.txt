@@ -8,10 +8,8 @@ network:
   ethernets:
     enp0s8:
       addresses: [172.16.0.5/24]
-      # Si necesitas gateway y DNS, agrega:
-      # gateway4: 172.16.0.1
-      # nameservers:
-      #   addresses: [8.8.8.8, 8.8.4.4]
+       gateway4: 172.16.0.1
+      
 
 # 3. Aplicar la configuración
 sudo netplan apply
@@ -21,3 +19,4 @@ ip addr show enp0s8
 
 # 5. Probar conectividad (si hay otro dispositivo en la red)
 ping -c 4 172.16.0.1
+
